@@ -7,8 +7,6 @@ class Menu{
 public:
     std::string title;
     std::vector<Menu*> sub_menu;
-    // std::function<void()> callback; //!修正callback声明 需要的是一个std::function对象 而不是一个函数不要加()
-    // Menu(const std::string& t, std::function<void()> cb = nullptr) : title(t),  callback(cb) {}
     Menu(const std::string& t) : title(t) {}
     void add_sub_menu(Menu* menu) { sub_menu.push_back(menu); }
     void display(){
@@ -42,15 +40,14 @@ public:
 class LoginMenu : public Menu{
 public:
     std::function<bool()> bool_callback;
-    //!虽然定义了 bool_callback 来接受一个 std::function<bool()> 类型的回调函数，但在构造函数中并没有将传入的回调函数 cb 赋值给 bool_callback
     LoginMenu(const std::string& t, std::function<bool()> cb = nullptr) : Menu(t), bool_callback(cb) {} 
 
     void handle_input(){
-            if(bool_callback){
-                bool res = bool_callback();
-                if(res)
-                    sub_menu[0]->handle_input();// SimpleMenu::handle_input();
-            }
+        if(bool_callback){
+            bool res = bool_callback();
+            if(res)
+                sub_menu[0]->handle_input();// SimpleMenu::handle_input();
+        }
     }
 };
 
@@ -104,8 +101,9 @@ FuncMenu self_info_menu("我的信息", &self_info_callback);
 FuncMenu recharge_info_menu("个人充值");
 
 
-
-bool user_login_callback() { //后续重写为数据库/读文件
+ //后续重写为数据库/读文件
+bool user_login_callback() 
+{
     std::string username, password;
     std::cout << "username :" ;
     std::cin >> username;
@@ -117,7 +115,9 @@ bool user_login_callback() { //后续重写为数据库/读文件
         return false;
 }
 
-bool admin_login_callback() { //后续重写为数据库/读文件
+//后续重写为数据库/读文件
+bool admin_login_callback() 
+{ 
     std::string username, password;
     std::cout << "username :" ;
     std::cin >> username;
